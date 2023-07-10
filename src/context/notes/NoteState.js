@@ -14,28 +14,31 @@ const NoteState = (props) => {
           "auth-token": getToken,
         },
       });
-      console.log(data);
       if (data?.success) {
         setNotes(data.data);
       }
     } catch (error) {
-      alert(error.response.data.message);
+      alert(error.response.data.errors[0].msg);
     }
   };
 
   const addNote = async (title, description, tag) => {
-    const { data } = await axios.post(
-      apiHost + "/api/notes/addnote",
-      { title, description, tag },
-      {
-        headers: {
-          "Content-Type": "application/json",
-          "auth-token": getToken,
-        },
-      }
-    );
-    console.log(data);
-    getNotes();
+    try {
+      const { data } = await axios.post(
+        apiHost + "/api/notes/addnote",
+        { title, description, tag },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            "auth-token": getToken,
+          },
+        }
+      );
+      console.log(data);
+      getNotes();
+    } catch (error) {
+      alert(error.response.data.errors[0].msg);
+    }
   };
 
   const editNote = async (id, title, description, tag) => {
@@ -60,17 +63,21 @@ const NoteState = (props) => {
   const deleteNote = async (id) => {
     const isDelete = window.confirm("Apakan anda yakin ingin menghapus?");
     if (isDelete) {
-      const { data } = await axios.delete(
-        apiHost + "/api/notes/deletenote/" + id,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            "auth-token": getToken,
-          },
-        }
-      );
-      console.log(data);
-      getNotes();
+      try {
+        const { data } = await axios.delete(
+          apiHost + "/api/notes/deletenote/" + id,
+          {
+            headers: {
+              "Content-Type": "application/json",
+              "auth-token": getToken,
+            },
+          }
+        );
+        console.log(data);
+        getNotes();
+      } catch (error) {
+        alert(error.response.data.errors[0].msg);
+      }
     }
   };
 
