@@ -2,7 +2,7 @@ import React, { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import AuthContext from "../context/auth/AuthContext";
 
-export default function Login(props) {
+export default function Login() {
   const [credentials, setCredentials] = useState({ email: "", password: "" });
   const { LoginFetch } = useContext(AuthContext);
   let navigate = useNavigate();
@@ -10,7 +10,7 @@ export default function Login(props) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const response = await LoginFetch(credentials);
-    console.log(response);
+    console.log("res:",response);
     if (response.success) {
       localStorage.setItem("auth-token", response.data);
       navigate("/");

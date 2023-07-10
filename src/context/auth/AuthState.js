@@ -5,46 +5,45 @@ import axios from "axios";
 
 const AuthState = ({ children }) => {
   async function LoginFetch(credentials) {
-    // const response = await fetch(apiHost + `/api/auth/login`, {
-    //   method: "POST",
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //     "Access-Control-Allow-Origin": "*",
-    //     "Access-Control-Allow-Credentials": "true",
-    //   },
-    //   // mode: "no-cors",
-    //   body: JSON.stringify({
-    //     email: credentials.email,
-    //     password: credentials.password,
-    //   }),
-    // });
-
-    return await axios.post(
-      apiHost + "/api/auth/login",
-      {
-        email: credentials.email,
-        password: credentials.password,
-      },
-      {
-        // headers: {
-        //   "Content-Type": "application/json",
-        //   "Access-Control-Allow-Origin": "*",
-        // },
-        withCredentials: false,
-      }
-    );
+    try {
+      const { data } = await axios.post(
+        apiHost + "/api/auth/login",
+        {
+          email: credentials.email,
+          password: credentials.password,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      return data;
+    } catch (error) {
+      return error.response.data;
+    }
   }
 
   async function SignUpFetch(credentials) {
     const { name, email, password } = credentials;
-    const response = await fetch(apiHost + `/api/auth/createuser`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ name, email, password }),
-    });
-    return await response.json();
+    try {
+      const { data } = await axios.post(
+        apiHost + "/api/auth/createuser",
+        {
+          name,
+          email,
+          password,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      return data;
+    } catch (error) {
+      return error.response.data;
+    }
   }
   return (
     <AuthContext.Provider value={{ LoginFetch, SignUpFetch }}>
