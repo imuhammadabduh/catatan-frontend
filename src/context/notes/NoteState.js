@@ -4,14 +4,13 @@ import apiHost from "../../datas/Host";
 import axios from "axios";
 
 const NoteState = (props) => {
-  const getToken = localStorage.getItem("auth-token");
   const [notes, setNotes] = useState([]);
   const getNotes = async () => {
     try {
       const { data } = await axios.get(apiHost + "/api/notes/fetchallnotes", {
         headers: {
           "Content-Type": "application/json",
-          "auth-token": getToken,
+          "auth-token": localStorage.getItem("auth-token"),
         },
       });
       if (data?.success) {
@@ -23,22 +22,18 @@ const NoteState = (props) => {
   };
 
   const addNote = async (title, description, tag) => {
-    try {
-      const { data } = await axios.post(
-        apiHost + "/api/notes/addnote",
-        { title, description, tag },
-        {
-          headers: {
-            "Content-Type": "application/json",
-            "auth-token": getToken,
-          },
-        }
-      );
-      console.log(data);
-      getNotes();
-    } catch (error) {
-      alert(error.response.data.errors[0].msg);
-    }
+    const { data } = await axios.post(
+      apiHost + "/api/notes/addnote",
+      { title, description, tag },
+      {
+        headers: {
+          "Content-Type": "application/json",
+          "auth-token": localStorage.getItem("auth-token"),
+        },
+      }
+    );
+    console.log(data);
+    getNotes();
   };
 
   const editNote = async (id, title, description, tag) => {
@@ -49,7 +44,7 @@ const NoteState = (props) => {
         {
           headers: {
             "Content-Type": "application/json",
-            "auth-token": getToken,
+            "auth-token": localStorage.getItem("auth-token"),
           },
         }
       );
@@ -63,21 +58,17 @@ const NoteState = (props) => {
   const deleteNote = async (id) => {
     const isDelete = window.confirm("Apakan anda yakin ingin menghapus?");
     if (isDelete) {
-      try {
-        const { data } = await axios.delete(
-          apiHost + "/api/notes/deletenote/" + id,
-          {
-            headers: {
-              "Content-Type": "application/json",
-              "auth-token": getToken,
-            },
-          }
-        );
-        console.log(data);
-        getNotes();
-      } catch (error) {
-        alert(error.response.data.errors[0].msg);
-      }
+      const { data } = await axios.delete(
+        apiHost + "/api/notes/deletenote/" + id,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            "auth-token": localStorage.getItem("auth-token"),
+          },
+        }
+      );
+      console.log(data);
+      getNotes();
     }
   };
 
